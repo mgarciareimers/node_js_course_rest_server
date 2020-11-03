@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/mgarciareimers/node_js_course_rest_server#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "bcrypt": "^5.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.11",
+    "mongoose-unique-validator": "^2.0.3"
   }
 }
