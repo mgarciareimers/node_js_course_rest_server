@@ -1,11 +1,27 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const _ = require('underscore');
+
 const User = require('../models/user');
 
 const app = express();
 
 app.get('/user', function (req, res) {
-    res.json('Get user');
+  let { page, limit } = req.query;
+
+  page = Number(page) > 0 ? Number(page) : 1;
+  limit = Number(limit) > 0 ? Number(limit) : 5;
+
+  User.find({}, 'name email role state google img')
+    .limit(limit)
+    .skip((page - 1) * limit)
+    .exec((error, users) => {
+      if (error) {
+        return res.status(400).json({ ok: false, message: 'An error occured while fetching the users', error: error });
+      }
+
+      User.countDocuments({}, (error, count) => res.status(200).json({ ok: true, count: count, users: users }));
+    });
 });
    
 app.post('/user', function (req, res) {
@@ -37,11 +53,12 @@ app.put('/user/:id', function (req, res) {
       return res.status(400).json({ ok: false, message: 'Wrong data' });
     }
 
-    User.findByIdAndUpdate(id, user, { new: true }, (error, userDB) => {
+    User.findByIdAndUpdate(id, _.pick(user, ['name', 'email', 'role', 'img', 'state']), { new: true, runValidators: true, context: 'query' }, (error, userDB) => {
       if (error) {
         return res.status(400).json({ ok: false, message: 'An error occured while updating the user', error: error });
       }
 
+      userDB.password = undefined;
 
       res.status(200).json({ ok: true, user: userDB });
     });
