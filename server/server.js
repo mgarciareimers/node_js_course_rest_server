@@ -15,12 +15,10 @@ app.get('/', function (req, res) {
 app.use(require('./routes/user'));
 
 // Initialize Database.
-mongoose.connect('mongodb://localhost:27017/coffee', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, (error, response) => {
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, (error, response) => {
   if (error) {
     throw error;
   }
-
-  console.log('Data base online');
 });
 
 
