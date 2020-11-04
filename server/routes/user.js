@@ -64,8 +64,18 @@ app.put('/user/:id', function (req, res) {
     });
 });
   
-app.delete('/user', function (req, res) {
-    res.json('Delete user');
+app.delete('/user/:id', function (req, res) {
+  const { id } = req.params;
+
+   User.findByIdAndRemove(id, { useFindAndModify: false }, (error, deletedUser) => {
+    if (error) {
+      return res.status(400).json({ ok: false, message: 'An error occured while deleting the user', error: error });
+    } else if (deletedUser === null) {
+      return res.status(400).json({ ok: false, message: 'An error occured while deleting the user', error: { message: 'User not found' } });
+    }
+
+    res.status(200).json({ ok: true, deletedUser: deletedUser })
+   });
 });
 
 module.exports = app;
