@@ -6,13 +6,9 @@ const mongoose = require('mongoose');
 const app = express();
 
 app.use(express.json());
- 
-app.get('/', function (req, res) {
-  res.json('Hello World');
-});
 
-// User routes.
-app.use(require('./routes/user'));
+// Routes Configuration.
+app.use(require('./routes'));
 
 // Initialize Database.
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, (error, response) => {
