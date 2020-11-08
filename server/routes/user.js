@@ -3,10 +3,11 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const User = require('../models/user');
+const verifyToken = require('../middlewares/authentication');
 
 const app = express();
 
-app.get('/user', function (req, res) {
+app.get('/user', verifyToken, (req, res) => {
   let { page, limit } = req.query;
 
   page = Number(page) > 0 ? Number(page) : 1;
@@ -24,7 +25,7 @@ app.get('/user', function (req, res) {
     });
 });
    
-app.post('/user', function (req, res) {
+app.post('/user', (req, res) => {
     const { user } = req.body;
   
     if (user === undefined || user === null || user.name === undefined || user.name === null) {
@@ -44,7 +45,7 @@ app.post('/user', function (req, res) {
     });
 });
   
-app.put('/user/:id', function (req, res) {
+app.put('/user/:id', (req, res) => {
     const { id } = req.params;
 
     const { user } = req.body;
@@ -66,7 +67,7 @@ app.put('/user/:id', function (req, res) {
     });
 });
 
-app.put('/user/:id/delete', function (req, res) {
+app.put('/user/:id/delete', (req, res) => {
   const { id } = req.params;
 
   User.findByIdAndUpdate(id, _.pick({ state: false }, ['state']), { new: true, context: 'query', useFindAndModify: false }, (error, userDB) => {
@@ -82,7 +83,7 @@ app.put('/user/:id/delete', function (req, res) {
   });
 });
   
-app.delete('/user/:id', function (req, res) {
+app.delete('/user/:id', (req, res) => {
   const { id } = req.params;
 
    User.findByIdAndRemove(id, { useFindAndModify: false }, (error, deletedUser) => {

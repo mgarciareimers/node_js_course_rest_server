@@ -21,7 +21,7 @@ app.post('/login', (req, res) => {
             return res.status(400).json({ ok: false, message: 'Your credentials are not valid', error: { message: 'Your credentials are not valid' } });
         }
 
-        const token = jwt.sign({ user: userDB, }, 'secret', { expiresIn: process.env.JWT_EXPIRATION });
+        const token = jwt.sign({ user: userDB, }, process.env.AUTHENTICATION_SEED, { expiresIn: process.env.JWT_EXPIRATION });
 
         res.status(200).json({ ok: true, user: userDB, token: token });
     });
