@@ -25,7 +25,7 @@ app.get('/user', verifyToken, (req, res) => {
     });
 });
    
-app.post('/user', (req, res) => {
+app.post('/user', verifyToken, (req, res) => {
     const { user } = req.body;
   
     if (user === undefined || user === null || user.name === undefined || user.name === null) {
@@ -45,7 +45,7 @@ app.post('/user', (req, res) => {
     });
 });
   
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', verifyToken, (req, res) => {
     const { id } = req.params;
 
     const { user } = req.body;
@@ -67,7 +67,7 @@ app.put('/user/:id', (req, res) => {
     });
 });
 
-app.put('/user/:id/delete', (req, res) => {
+app.put('/user/:id/delete', verifyToken, (req, res) => {
   const { id } = req.params;
 
   User.findByIdAndUpdate(id, _.pick({ state: false }, ['state']), { new: true, context: 'query', useFindAndModify: false }, (error, userDB) => {
@@ -83,7 +83,7 @@ app.put('/user/:id/delete', (req, res) => {
   });
 });
   
-app.delete('/user/:id', (req, res) => {
+app.delete('/user/:id', verifyToken, (req, res) => {
   const { id } = req.params;
 
    User.findByIdAndRemove(id, { useFindAndModify: false }, (error, deletedUser) => {
