@@ -25,4 +25,20 @@ const verifyToken = (req, res, next) => {
     });
 }
 
-module.exports = verifyToken;
+// ===================
+// Verify Admin Role
+// ===================
+const verifyAdminRole = (req, res, next) => {
+    const { user } = req;
+
+    if (userDB.role !== 'ADMIN_ROLE') {
+        return res.status(401).json({ ok: false, message: 'Authorization failed!', error : { message: 'Invalid role' } });
+    }
+
+    next();
+}
+
+module.exports = {
+    verifyToken,
+    verifyAdminRole,
+};
