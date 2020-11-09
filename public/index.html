@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sign In Demo</title>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="132769593997-ocbcpp1apdvh69kcjstijj8ncji2uamn.apps.googleusercontent.com">
+</head>
+<body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+    <br>
+
+    <a href="#" onclick="signOut();">Sign out</a>
+
+    <script>
+        function onSignIn(googleUser) {
+            let profile = googleUser.getBasicProfile();
+
+            const id_token = googleUser.getAuthResponse().id_token;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:3000/logingoogle', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.send(JSON.stringify({ googleToken: id_token }));
+        }
+
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+        }
+    </script>
+</body>
+</html>
