@@ -73,13 +73,9 @@ app.get('/product/filter/:filterText', verifyToken, (req, res) => {
                 return res.status(500).json({ ok: false, message: 'An error occured while fetching the products', error: error });
             }
 
-            Product.countDocuments({}, (error, count) => res.status(200).json({ ok: true, count: count, products: products }));
+            Product.countDocuments({ name: regex }, (error, count) => res.status(200).json({ ok: true, count: count, products: products }));
         });
 });
-
-
-
-
 
 // ===================
 // Create a Product
