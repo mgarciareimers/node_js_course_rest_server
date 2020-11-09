@@ -7,6 +7,9 @@ const { verifyToken, verifyAdminRole } = require('../middlewares/authentication'
 
 const app = express();
 
+// ===================
+// Get All Users
+// ===================
 app.get('/user', verifyToken, (req, res) => {
   let { page, limit } = req.query;
 
@@ -24,7 +27,10 @@ app.get('/user', verifyToken, (req, res) => {
       User.countDocuments({ state: true }, (error, count) => res.status(200).json({ ok: true, count: count, users: users }));
     });
 });
-   
+
+// ===================
+// Create a User
+// ===================
 app.post('/user', [verifyToken, verifyAdminRole], (req, res) => {
     const { user } = req.body;
   
@@ -44,7 +50,10 @@ app.post('/user', [verifyToken, verifyAdminRole], (req, res) => {
       res.status(201).json({ ok: true, user: userDB });
     });
 });
-  
+
+// ===================
+// Update a User
+// ===================
 app.put('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
     const { id } = req.params;
 
@@ -57,8 +66,8 @@ app.put('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
     User.findByIdAndUpdate(id, _.pick(user, ['name', 'email', 'role', 'img', 'state']), { new: true, runValidators: true, context: 'query', useFindAndModify: false }, (error, userDB) => {
       if (error) {
         return res.status(500).json({ ok: false, message: 'An error occured while updating the user', error: error });
-      } else if (userDB === null) {
-        return res.status(400).json({ ok: false, message: 'An error occured while updating the user', error: { message: 'User not found' } });
+      } else if (userDB === undefined || userDB === null) {
+        return res.status(404).json({ ok: false, message: 'An error occured while updating the user', error: { message: 'User not found' } });
       }
 
       userDB.password = undefined;
@@ -67,14 +76,17 @@ app.put('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
     });
 });
 
+// ===================
+// Delete a User (logic)
+// ===================
 app.put('/user/:id/delete', [verifyToken, verifyAdminRole], (req, res) => {
   const { id } = req.params;
 
   User.findByIdAndUpdate(id, _.pick({ state: false }, ['state']), { new: true, context: 'query', useFindAndModify: false }, (error, userDB) => {
     if (error) {
       return res.status(500).json({ ok: false, message: 'An error occured while deleting the user', error: error });
-    } else if (userDB === null) {
-      return res.status(400).json({ ok: false, message: 'An error occured while deleting the user', error: { message: 'User not found' } });
+    } else if (userDB === undefined || userDB === null) {
+      return res.status(404).json({ ok: false, message: 'An error occured while deleting the user', error: { message: 'User not found' } });
     }
 
     userDB.password = undefined;
@@ -82,19 +94,22 @@ app.put('/user/:id/delete', [verifyToken, verifyAdminRole], (req, res) => {
     res.status(200).json({ ok: true, user: userDB });
   });
 });
-  
+
+// ===================
+// Delete a User
+// ===================
 app.delete('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
   const { id } = req.params;
 
-   User.findByIdAndRemove(id, { useFindAndModify: false }, (error, deletedUser) => {
+  User.findByIdAndRemove(id, { useFindAndModify: false }, (error, deletedUser) => {
     if (error) {
       return res.status(500).json({ ok: false, message: 'An error occured while deleting the user', error: error });
-    } else if (deletedUser === null) {
-      return res.status(400).json({ ok: false, message: 'An error occured while deleting the user', error: { message: 'User not found' } });
+    } else if (deletedUser === undefined || deletedUser === null) {
+      return res.status(404).json({ ok: false, message: 'An error occured while deleting the user', error: { message: 'User not found' } });
     }
 
     res.status(200).json({ ok: true, deletedUser: deletedUser })
-   });
+  });
 });
 
 module.exports = app;

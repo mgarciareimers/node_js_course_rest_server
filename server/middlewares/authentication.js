@@ -31,7 +31,7 @@ const verifyToken = (req, res, next) => {
 const verifyAdminRole = (req, res, next) => {
     const { user } = req;
 
-    if (userDB.role !== 'ADMIN_ROLE') {
+    if (user.role !== 'ADMIN_ROLE') {
         return res.status(401).json({ ok: false, message: 'Authorization failed!', error : { message: 'Invalid role' } });
     }
 
