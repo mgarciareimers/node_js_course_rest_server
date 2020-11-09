@@ -27,4 +27,4 @@ process.env.DATABASE_URL = process.env.NODE_ENV === 'dev' ? 'mongodb://localhost
 // ===================
 // Google Client Id
 // ===================
-process.env.GOOGLE_CLIENT_ID = '132769593997-ocbcpp1apdvh69kcjstijj8ncji2uamn.apps.googleusercontent.com';
+process.env.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '132769593997-ocbcpp1apdvh69kcjstijj8ncji2uamn.apps.googleusercontent.com';
