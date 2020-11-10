@@ -88,7 +88,7 @@ app.post('/product', verifyToken, (req, res) => {
       return res.status(400).json({ ok: false, message: 'Wrong data' });
     }
     
-    const productScheme = new Product({ name: product.name, unitPrice: product.unitPrice, description: product.description, available: product.available, category: product.category, user: user });
+    const productScheme = new Product({ name: product.name, unitPrice: product.unitPrice, description: product.description, img: product.img, available: product.available, category: product.category, user: user });
 
     productScheme.save((error, productDB) => {
         if (error) {
@@ -111,7 +111,7 @@ app.put('/product/:id', verifyToken, (req, res) => {
       return res.status(400).json({ ok: false, message: 'Wrong data' });
     }
 
-    Product.findByIdAndUpdate(id, _.pick(product, ['name', 'unitPrice', 'description', 'available', 'category']), { new: true, runValidators: true, context: 'query', useFindAndModify: false }, (error, productDB) => {
+    Product.findByIdAndUpdate(id, _.pick(product, ['name', 'unitPrice', 'description', 'img', 'available', 'category']), { new: true, runValidators: true, context: 'query', useFindAndModify: false }, (error, productDB) => {
         if (error) {
           return res.status(500).json({ ok: false, message: 'An error occured while updating the product', error: error });
         } else if (productDB === undefined || productDB === null) {
